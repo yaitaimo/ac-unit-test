@@ -176,22 +176,22 @@ from io import StringIO
 import unittest
 
 class TestClass(unittest.TestCase):
-    def assertIO(self, input, output):
+    def assertIO(self, input, expected):
         stdout, stdin = sys.stdout, sys.stdin
         sys.stdout, sys.stdin = StringIO(), StringIO(input)
         resolve()
         sys.stdout.seek(0)
-        out = sys.stdout.read()[:-1]
+        actual = sys.stdout.read()[:-1]
         sys.stdout, sys.stdin = stdout, stdin
-        self.assertEqual(out, output)
+        self.assertEqual(expected, actual)
 `;
   
   for(var i = 0; i < io.length; i++){
     text += 
 `    def test_${io[i].name}(self):
         input = """${io[i].input.trim("\n").replace(/\n/g, '\r\n')}"""
-        output = """${io[i].output.trim("\n").replace(/\n/g, '\r\n')}"""
-        self.assertIO(input, output)
+        expected = """${io[i].output.trim("\n").replace(/\n/g, '\r\n')}"""
+        self.assertIO(input, expected)
 `;
   }
 
